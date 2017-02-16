@@ -1,0 +1,30 @@
+from pylab import *
+from sklearn import datasets, linear_model
+
+ntrials = 5
+x = arange(1,1+ntrials).astype(float)/2
+e2pop = 1.0
+web_frac = .2
+web_sd_pop = ((x/e2pop) + 1.0)*web_frac
+noise = normal(0,1,5)
+y = ((x/e2pop) + 1.0)*(1.0 + noise)
+web_sd = y*web_frac
+
+covar_mat = diag(web_sd)
+'''
+DM = zeros((2,ntrials))
+DM[0,:] = 1.0
+DM[1,:] = x
+'''
+
+regr = linear_model.LinearRegression(fit_intercept=True)
+x = x.reshape((len(x),1))
+y = y.reshape((len(y),1))
+regr.fit(x,y)
+coef_matlab_lin_reg = regr.coef_[:,0]
+yint_matlab_lin_reg = regr.intercept_
+yDM = zeros((2,ntrials))
+yDM[0,:] = ones(ntrials)*yint_matlab_lin_reg
+yDM[1,:] = x*coef_matlab_lin_reg
+
+
